@@ -9,8 +9,12 @@ namespace Assets.Scripts.Datas
     {
         [SerializeField] private GameObject shopKeeperPrefab;
         [SerializeField] private int maxKeeperCount = 5;
+        [SerializeField] private float speed = 1f;
+        [SerializeField] private float orderTakeDur = 0.5f;
+        
 
         public GameObject ShopKeeper => shopKeeperPrefab;
         public int MaxKeeperCount => maxKeeperCount;
+        public float Speed => speed;
     }
 }
