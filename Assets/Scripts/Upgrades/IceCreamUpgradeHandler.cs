@@ -15,6 +15,11 @@ namespace Upgrades
         [SerializeField] private IceCreamData vanilaData;
         [SerializeField] private IceCreamData chokalete;
 
+        private void Awake()
+        {
+            vanilaData.ResetUpgrade();
+            chokalete.ResetUpgrade();
+        }
         private void OnEnable()
         {
             IceCreamEvent.OnGetUpGradeCost += GetUpgradeCost;

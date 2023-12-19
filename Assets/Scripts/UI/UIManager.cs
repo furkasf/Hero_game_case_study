@@ -75,6 +75,9 @@ namespace UI
 
             IceCreamEvent.OnIncreaseUpgradeCost(IceCreamType.Chokelate);
 
+            sellPriceText.text = "Price : " + IceCreamEvent.OnGetSellPrice(IceCreamType.Chokelate);
+            timeText.text = "Time : " + IceCreamEvent.OnGetManifactureTime(IceCreamType.Chokelate);
+            upGradeCostText.text = "Cost : " + IceCreamEvent.OnGetUpGradeCost(IceCreamType.Chokelate);
             playerMoney.text = "Money : " + _money;
         }
     }

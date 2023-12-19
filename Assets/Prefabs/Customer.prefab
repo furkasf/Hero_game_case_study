@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02cfa3325ea568747890808b393fa564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 2
+  _moveSpeed: 3
   _iceCreamSprite: {fileID: 7052401409058483754}
   SpawnPoint: {fileID: 0}
   IsKeeperCome: 0

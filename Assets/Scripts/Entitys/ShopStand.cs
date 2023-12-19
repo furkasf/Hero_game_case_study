@@ -6,7 +6,6 @@ namespace Entitys
 {
     public class ShopStand : MonoBehaviour
     {
-        //[SerializeField] private List<ShopNode> _nodes;
 
         private List<ShopNode> _shopNodes = new List<ShopNode>();
 
@@ -18,6 +17,7 @@ namespace Entitys
             ShopStandEvent.OnGetAvailableCustomerAtShopNode += GetAvailableCustomerAtShopNode;
             ShopStandEvent.OnGetEmptyCustomerNode += GetEmptyCustomerNode;
             ShopStandEvent.OnAddcustomer += AddCustomer;
+            ShopStandEvent.OnIsAllNodesFull += IsAllNodesFull;
         }
 
         private void OnDisable()
@@ -25,6 +25,7 @@ namespace Entitys
             ShopStandEvent.OnGetAvailableCustomerAtShopNode -= GetAvailableCustomerAtShopNode;
             ShopStandEvent.OnGetEmptyCustomerNode -= GetEmptyCustomerNode;
             ShopStandEvent.OnAddcustomer -= AddCustomer;
+            ShopStandEvent.OnIsAllNodesFull -= IsAllNodesFull;
         }
 
         private void Awake()
@@ -55,7 +56,22 @@ namespace Entitys
             return sNode;
         }
 
-        private ShopNode GetAvailableCustomerAtShopNode() //herhangi bir nodda customer var mı bekliyor mu
+        private bool IsAllNodesFull()
+        {
+            bool isFull = true;
+
+            foreach(ShopNode node in _shopNodes)
+            {
+                if(node.IsNodeAvailable())
+                {
+                    isFull = false;
+                    break;
+                }
+            }
+            return isFull;
+        }
+
+        private ShopNode GetAvailableCustomerAtShopNode() 
         {
             ShopNode sNode = null;
 

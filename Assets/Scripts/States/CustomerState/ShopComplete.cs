@@ -18,7 +18,6 @@ namespace States.CustomerState
             _customer = customer;
         }
 
-
         public void OnEnter()
         {
             _spawnPoint = _customer.SpawnPoint;
@@ -32,13 +31,14 @@ namespace States.CustomerState
             _mySequence = DOTween.Sequence();
             _mySequence.Append(customerTrans.DORotateQuaternion(lookRot, 0.1f));
             _mySequence.Append(customerTrans.DOMove(_spawnPoint.position, _customer.MoveSpeed));
-            _mySequence.Append(customerTrans.DORotate(new Vector3(0, 180 ,0), 0.1f));
+            _mySequence.Append(customerTrans.DORotate(new Vector3(0, 180, 0), 0.1f));
 
             _mySequence.OnComplete(() => ReturnBackSpawnPoint());
         }
 
         public void OnExit()
         { }
+
         public void Tick()
         { }
 
@@ -48,7 +48,10 @@ namespace States.CustomerState
                 .OnComplete(() =>
                 {
                     PoolSignals.onPutObjectBackToPool(_customer.gameObject, "Customer");
-                    SpawnEvent.OnSpawn();
+                    if (!ShopStandEvent.OnIsAllNodesFull())
+                    {
+                        SpawnEvent.OnSpawn();
+                    }
                 }
                 );
         }

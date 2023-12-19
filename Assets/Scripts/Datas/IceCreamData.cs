@@ -29,5 +29,8 @@ namespace Datas
         public int GetSellPrice() => _sellValue[_upGradeAmount];
         public float GetManufactureTime() => _manifactureTime[_upGradeAmount];
         public bool CanUpgrade() => _upGradeAmount <= _upgradeCost.Length;
+
+        public void ResetUpgrade() => _upGradeAmount = 0;
+        
     }
 }
