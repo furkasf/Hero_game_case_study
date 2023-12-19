@@ -27,9 +27,9 @@ namespace Assets.Scripts.States.ShopKeeperSTate
 
         public void OnEnter()
         {
-            _spriteRenderer.gameObject.SetActive(true);
-
-            _destination = _shopKeeper.StandPos;
+            _destination = _shopKeeper.IceCreamMachine.position;
+            _shopKeeper.IsAriveIceCreamMachine = false;
+            Debug.Log($"enter MakeIceCream");
 
             _mySequence = DOTween.Sequence();
 
@@ -47,10 +47,10 @@ namespace Assets.Scripts.States.ShopKeeperSTate
             _mySequence.Append(_transform.DORotateQuaternion(lookRot, 0.1f));
             _mySequence.OnComplete(() =>
             {
-                _spriteRenderer.material.DOFloat(360, "_Arc1", 5f)
+                _spriteRenderer.material.DOFloat(360, "_Arc1", 2f)
                 .OnComplete(() =>
                 {
-                    _spriteRenderer.material.SetFloat("_Arc1", 0);
+                    _spriteRenderer.gameObject.SetActive(true);
                     _shopKeeper.IceCreameDone = true;
                 });
             });

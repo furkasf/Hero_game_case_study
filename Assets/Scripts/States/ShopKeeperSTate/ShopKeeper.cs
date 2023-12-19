@@ -1,4 +1,5 @@
-﻿using Assets.StateMachines;
+﻿using Assets.Scripts.shoping;
+using Assets.StateMachines;
 using Assets.States;
 using NaughtyAttributes;
 using System;
@@ -12,25 +13,29 @@ namespace Assets.Scripts.States.ShopKeeperSTate
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private Transform _iceCreamMachine;
 
+
+        public ShopNode ShopNode { get; set; }
+
         private StateMachine _stateMachine;
 
         public float OrderDuration { get; set; }//TODO ScriptableaÇEK
         public float IceCReammakeDur { get; set; }//TODO ScriptableaÇEK
-
         public Vector3 CustomerWaypoint { get; set; }
         public Vector3 StandPos { get; set; }
         public bool OrderTaken { get; set; }
         public bool IsAriveIceCreamMachine { get; set; }
         public bool IceCreameDone { get; set; }
         public bool DeliveryDone { get; set; }
+        public bool IsAvaible { get; set; }
         public Customer Customer { get; set; }
         public Transform MyTransform => _myTransform;
+        public Transform IceCreamMachine => _iceCreamMachine;
 
-        private void Awake()
+        private void Start()
         {
             _stateMachine = new StateMachine();
 
-            WaitOrder waitOrder = new WaitOrder(this, _myTransform);
+            ShopKeeperWaitOrder waitOrder = new ShopKeeperWaitOrder(this, _myTransform);
             GetOrder getOrder = new GetOrder(this, _myTransform, _spriteRenderer);
             MakeIceCream makeIceCream = new MakeIceCream(this, _myTransform, _spriteRenderer);
             Deliver deliver = new Deliver(this, _myTransform);
@@ -44,31 +49,21 @@ namespace Assets.Scripts.States.ShopKeeperSTate
 
             void At(IState to, IState from, Func<bool> condition) => _stateMachine.AddTransition(to, from, condition);
 
-            Func<bool> IsTakeOrder() => () => OrderTaken;
+            Func<bool> IsTakeOrder() => () => ShopNode != null;
             Func<bool> IsReachIceCreamMachine() => () => IsAriveIceCreamMachine;
             Func<bool> IsIceCreamDone() => () => IceCreameDone;
-            Func<bool> IsDeliveryDone() => () => DeliveryDone;
+            Func<bool> IsDeliveryDone() => () => DeliveryDone && ShopNode == null;
         }
 
         private void Update() => _stateMachine.Tick();
 
         [Button]
-        public void GetCustomer()
-        {
-            //Customer = customer;
-            OrderTaken = true;
+        public void LearnHavenode()
+        { 
+
+            Debug.Log("shop not exist :" + ShopNode != null);
+            Debug.Log("custumer exist :" + ShopNode.Customer == null);
+            Debug.Log("shopkeeper exist :" + ShopNode.ShopKeeper != null);
         }
-
-        [Button]
-        public void GoIcreamMachine() => IsAriveIceCreamMachine = true;
-
-        [Button]
-        public void GetIcreamDone()
-        {
-            IceCreameDone = true;
-        }
-
-        [Button]
-        public void GetDeliveryDone() => DeliveryDone = true;
     }
 }

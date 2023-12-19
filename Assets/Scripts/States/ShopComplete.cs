@@ -36,7 +36,7 @@ namespace Assets.Scripts.States
             _mySequence.Append(customerTrans.DOMove(_spawnPoint.position, 1f));
             _mySequence.Append(customerTrans.DORotate(Vector3.forward, 0.1f));
 
-            _mySequence.OnComplete(() => _customer.IsKeeperCome = true);// change transition to wait oder
+            _mySequence.OnComplete(() => { ReturnBackSpawnPoint(); });// change transition to wait oder
         }
 
         public void OnExit()
@@ -44,16 +44,16 @@ namespace Assets.Scripts.States
 
         private void ReturnBackSpawnPoint()
         {
-            Transform spawnPoint = SpawnSignals.OnGetSpawnPoint();
-            _customer.transform.DOMove(spawnPoint.position, _customer.MoveSpeed)
-                .OnComplete(() => PutBackToPoll());
+            _customer.transform.DOMove(_customer.SpawnPoint.position, _customer.MoveSpeed)
+                .OnComplete(() => 
+                {
+                   // _customer.ShopNode.ResetNode();
+                    //_customer.ShopNode = null;
+                    _customer.gameObject.SetActive(false);
+                }
+                );
         }
 
-        private void PutBackToPoll()
-        {
-            //reset the state
-            //pull bask object
-            Debug.Log("object returned to pool");
-        }
+     
     }
 }

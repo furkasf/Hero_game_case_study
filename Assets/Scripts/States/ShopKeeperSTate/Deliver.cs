@@ -1,4 +1,5 @@
-﻿using Assets.States;
+﻿using Assets.Scripts.Signals;
+using Assets.States;
 using DG.Tweening;
 using UnityEngine;
 
@@ -20,10 +21,14 @@ namespace Assets.Scripts.States.ShopKeeperSTate
 
         public void OnEnter()
         {
+            _shopKeeper.IceCreameDone = false;
+
+            Debug.Log($"enter Delivery");
+
 
             _mySequence = DOTween.Sequence();
 
-            _destination = _shopKeeper.CustomerWaypoint;
+            _destination = _shopKeeper.ShopNode.ShopKeperWaitPOs;
 
             Vector3 lookDir = _destination - _transform.position;
             Quaternion lookRot = Quaternion.LookRotation(lookDir);
@@ -32,16 +37,24 @@ namespace Assets.Scripts.States.ShopKeeperSTate
             _mySequence.Append(_transform.DOMove(_destination, 1f));
             _mySequence.Append(_transform.DORotate(Vector3.forward, 0.1f));
 
-            _mySequence.OnComplete(() => _shopKeeper.DeliveryDone = true);
+            _mySequence.OnComplete(delegate
+            {
+                _shopKeeper.ShopNode.Customer.DeliveryTaken();
+
+                _shopKeeper.ShopNode.ResetNode();
+                _shopKeeper.ShopNode = null;
+                
+                _shopKeeper.DeliveryDone = true;
+                
+            });
         }
 
         public void OnExit()
         {
-            _shopKeeper.OrderTaken = false;
-            _shopKeeper.DeliveryDone = false;
-            _shopKeeper.IceCreameDone = false;
-            _shopKeeper.IsAriveIceCreamMachine = false;
+
+           
         }
+
 
         public void Tick()
         {

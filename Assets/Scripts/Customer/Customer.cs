@@ -1,41 +1,46 @@
+using Assets.Scripts.shoping;
 using Assets.Scripts.States;
 using Assets.StateMachines;
 using Assets.States;
+using NaughtyAttributes;
 using System;
 using UnityEngine;
 
 public class Customer : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed = 2f;
-    [SerializeField] private Transform _shopKeeperLine;
-    [SerializeField] private Transform _orderLine;
-    // add Ice cream sprite
+    [SerializeField] private GameObject _iceCreamSprite;
 
     private StateMachine _stateMachine;
 
-    public Transform SpawnPoint;
-    public bool _isGetOrder;
-    public float MoveSpeed => _moveSpeed;
-    public Transform ShopKeeperLine => _shopKeeperLine;
-    public Transform OrderLine => _orderLine;
+    private GoToIceCreamShop _goToIceCreamShop;
+    private CustomerWaitOrder _waitOrder;
+    private ShopComplete _shopComplete;
 
-    public Transform ShopKeeper;
 
-    //test booleand
+
+    public Transform SpawnPoint; // Sa
+    //Take the prop
     public bool IsKeeperCome;
+    public float MoveSpeed => _moveSpeed;
+    public bool _isGetOrder;
+    public bool IsMovedOut { get; set; }
+    public ShopNode ShopNode{ get; set; }
+    public GameObject IceCreamSprite => _iceCreamSprite;
 
-    private void Awake()
+    private void Start()
     {
         _stateMachine = new StateMachine();
 
-        GoToIceCreamShop goToIceCreamShop = new GoToIceCreamShop(this);
-        WaitOrder waitOrder = new WaitOrder(this);
-        ShopComplete shopComplete = new ShopComplete(this, ref _stateMachine);
+        _goToIceCreamShop = new GoToIceCreamShop(this);
+        _waitOrder = new CustomerWaitOrder(this);
+        _shopComplete = new ShopComplete(this, ref _stateMachine);
 
-        At(goToIceCreamShop, waitOrder, IsReachShop());
-        At(waitOrder, shopComplete, IsOrderTaken());
 
-        _stateMachine.SetState(goToIceCreamShop);
+        At(_goToIceCreamShop, _waitOrder, IsReachShop());
+        At(_waitOrder, _shopComplete, IsOrderTaken());
+
+        _stateMachine.SetState(_goToIceCreamShop);
 
         void At(IState to, IState from, Func<bool> condition) => _stateMachine.AddTransition(to, from, condition);
 
@@ -43,12 +48,29 @@ public class Customer : MonoBehaviour
         Func<bool> IsOrderTaken() => () => _isGetOrder;
     }
 
+    
     private void Update()
     {
         _stateMachine?.Tick();
     }
 
+
     // write funtions which change customer behavior conditions and attach to signals if needed
 
-    public void SetOrder(bool isOrder) => _isGetOrder = isOrder;
+    [Button]
+    public void ReStartStateMachine()
+    {
+        ShopNode = null;
+        IsKeeperCome = false;
+        _isGetOrder = false;
+        IsMovedOut = false;
+        _stateMachine.SetState(_goToIceCreamShop);
+    }
+    public void DeliveryTaken()
+    {
+        _isGetOrder = true;
+        IsKeeperCome = false;
+
+        ShopNode= null;
+    }// bunu shop keeperda manupule et
 }

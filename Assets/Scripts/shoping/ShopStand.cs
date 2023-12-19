@@ -1,93 +1,75 @@
 ﻿using Assets.Scripts.Signals;
 using Assets.Scripts.States.ShopKeeperSTate;
-using NaughtyAttributes;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 namespace Assets.Scripts.shoping
 {
-
     public class ShopStand : MonoBehaviour
     {
-        [SerializeField] private List<ShopNode> _nodes;
+        //[SerializeField] private List<ShopNode> _nodes;
 
-        [ShowNonSerializedField] private List<Customer> _activeCustomers = new List<Customer>();
-        [ShowNonSerializedField] private List<ShopKeeper> _activeShopKeepers = new List<ShopKeeper>();
+        private List<ShopNode> _shopNodes = new List<ShopNode>();
 
+        [SerializeField] private Transform[] _customerWaitPos = new Transform[3];
+        [SerializeField] private Transform[] _shopKeeperWaitPos = new Transform[3];
 
         private void OnEnable()
         {
-            ShopStandEvent.OnAddNewCustomer += AddNewCustumer;
-            ShopStandEvent.OnRemoveCustomer += RemoveCustomer;
-            ShopStandEvent.OnAddNewShopKeeper += AddNewShopKeeper;
-            ShopStandEvent.OnRemoveShopKeeper += RemoveShopKeeper;
+            ShopStandEvent.OnGetAvailableCustomerAtShopNode += GetAvailableCustomerAtShopNode;
+            ShopStandEvent.OnGetEmptyCustomerNode += GetEmptyCustomerNode;
+            ShopStandEvent.OnAddcustomer += AddCustomer;
         }
 
         private void OnDisable()
         {
-            ShopStandEvent.OnAddNewCustomer -= AddNewCustumer;
-            ShopStandEvent.OnRemoveCustomer -= RemoveCustomer;
-            ShopStandEvent.OnAddNewShopKeeper -= AddNewShopKeeper;
-            ShopStandEvent.OnRemoveShopKeeper -= RemoveShopKeeper;
+            ShopStandEvent.OnGetAvailableCustomerAtShopNode -= GetAvailableCustomerAtShopNode;
+            ShopStandEvent.OnGetEmptyCustomerNode -= GetEmptyCustomerNode;
+            ShopStandEvent.OnAddcustomer -= AddCustomer;
         }
 
-        private void AddNewCustumer(Customer customer)
+        private void Awake()
         {
-            if(!_activeCustomers.Contains(customer))
+            for (int i = 0; i < 3; i++)
             {
-                Debug.Log("customer listeye eklendi");
-                _activeCustomers.Add(customer);
-            }
-            return;
-        }
-
-        private void RemoveCustomer(Customer customer)
-        {
-            if (_activeCustomers.Contains(customer))
-            {
-                Debug.Log("customer listed cikarildi");
-                _activeCustomers.Remove(customer);
-                _activeCustomers.TrimExcess();
-            }
-            return;
-        }
-
-        private void AddNewShopKeeper(ShopKeeper shopKeeper)
-        {
-            if (!_activeShopKeepers.Contains(shopKeeper))
-            {
-                Debug.Log("shop keeper listeye eklendi");
-                _activeShopKeepers.Add(shopKeeper);
-            }
-            return;
-        }
-
-        private void RemoveShopKeeper(ShopKeeper shopKeeper)
-        {
-            Debug.Log("shop keeper listeden cikarildi");
-            if(_activeShopKeepers.Contains(shopKeeper))
-            {
-                _activeShopKeepers.Remove(shopKeeper);
-                _activeShopKeepers.TrimExcess();
+                ShopNode node = new ShopNode(_customerWaitPos[i].position, _shopKeeperWaitPos[i].position);
+                _shopNodes.Add(node);
             }
         }
 
-        private void MatchKeeperAndCustomer()
+        private void AddCustomer(ShopNode shopNode, Customer customer)
         {
-            if (_activeCustomers.Count < 0)
-            {
-                Debug.Log("there Is not Enouph Cutomer");
-                return;
-            }
+            shopNode.AddCustomer(customer);
+        }
 
-            foreach (var node in _nodes)
+        private ShopNode GetEmptyCustomerNode()
+        {
+            ShopNode sNode = null;
+
+            foreach (ShopNode node in _shopNodes)
             {
-                if (!node.CheakNodeIsFull())
+                if (node.IsNodeAvailable())
                 {
-                    node._shopKeeperNode = _activeShopKeepers[0].transform;
+                    sNode = node;
                 }
             }
+            return sNode;
+        }
+
+        private ShopNode GetAvailableCustomerAtShopNode() //herhangi bir nodda customer var mı bekliyor mu
+        {
+            ShopNode sNode = null;
+
+            foreach (ShopNode node in _shopNodes)
+            {
+                if (node.IsCustomerWaiting())
+                {
+                    sNode = node;
+                    return sNode;
+                }
+            }
+
+            return sNode;
         }
     }
 }

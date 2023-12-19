@@ -25,11 +25,14 @@ namespace Assets.Scripts.States.ShopKeeperSTate
         public void OnEnter()
         {
 
-            _spriteREnderer.gameObject.SetActive(true);
+           // _shopKeeper.IsAvaible = false;
+           
 
             _mySequence = DOTween.Sequence();
 
-            _destination = _shopKeeper.CustomerWaypoint;
+            Debug.Log("enter get order");
+
+            _destination = _shopKeeper.ShopNode.ShopKeperWaitPOs;
 
             Vector3 lookDir = _destination - _transform.position;
             Quaternion lookRot = Quaternion.LookRotation(lookDir);
@@ -39,16 +42,17 @@ namespace Assets.Scripts.States.ShopKeeperSTate
             _mySequence.Append(_transform.DORotate(Vector3.forward, 0.1f));
             _mySequence.OnComplete(() =>
             {
-
-                _spriteREnderer.material.DOFloat(360, "_Arc1", 5f)
-                .OnComplete(() => TakeOrder()); //get from iceCream machine
+                _spriteREnderer.gameObject.SetActive(true);
+                _spriteREnderer.material.DOFloat(360, "_Arc1", 2f)// iceCreamd upgraden all
+                .OnComplete(() => _shopKeeper.IsAriveIceCreamMachine = true); 
             });
         }
 
-        private void TakeOrder()
-        {
-            _spriteREnderer.DOColor(Color.green, _orderDuration).OnComplete(() => _shopKeeper.IsAriveIceCreamMachine = true);
-        }
+        //private void TakeOrder()
+        //{
+        //    _spriteREnderer.DOColor(Color.green, _orderDuration)
+        //        .OnComplete(() => );
+        //}
 
         public void OnExit()
         {

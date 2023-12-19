@@ -1,37 +1,34 @@
-﻿using Assets.States;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Assets.Scripts.Signals;
+using Assets.States;
+using TMPro;
 using UnityEngine;
 
 namespace Assets.Scripts.States
 {
-    public class WaitOrder : IState
+    public class CustomerWaitOrder : IState
     {
         private Customer _customer;
 
-        public WaitOrder(Customer customer)
+        public CustomerWaitOrder(Customer customer)
         {
             _customer = customer;
         }
+
         public void OnEnter()
         {
             Debug.Log("enter wait order state");
-            //enter idle animation
-            //open ice CreamSprite
+            _customer.IceCreamSprite.SetActive(true);   
         }
 
         public void OnExit()
         {
+            _customer.IceCreamSprite.SetActive(false);
             Debug.Log("exit wait order state");
-
         }
 
         public void Tick()
         {
-            
         }
+      
     }
 }
