@@ -1,10 +1,10 @@
-﻿using Assets.Scripts.shoping;
-using Assets.Scripts.Signals;
-using Assets.States;
+﻿using Assets.States;
+using Entitys;
 using DG.Tweening;
+using Events;
 using UnityEngine;
 
-namespace Assets.Scripts.States.ShopKeeperSTate
+namespace States.ShopKeeperSTate
 {
     public class ShopKeeperWaitOrder : IState
     {
@@ -21,16 +21,12 @@ namespace Assets.Scripts.States.ShopKeeperSTate
 
         public void OnEnter()
         {
-
             if (_shopKeeper.ShopNode != null)
             {
-              
-
                 _shopKeeper.ShopNode.ResetNode(); ;
-                _shopKeeper.ShopNode  = null;
+                _shopKeeper.ShopNode = null;
             }
 
-            Debug.Log("shop keeper enter wait state");
             _shopKeeper.DeliveryDone = false;
             _shopKeeper.transform.DOMove(_startPos, 3f);
         }

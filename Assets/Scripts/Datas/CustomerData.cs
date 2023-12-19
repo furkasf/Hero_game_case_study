@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.Datas
+namespace Datas
 {
     [CreateAssetMenu(fileName = "CustomerData", menuName = "GameData/CustomerData")]
     public class CustomerData : ScriptableObject

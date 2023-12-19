@@ -1,8 +1,11 @@
 ﻿using Assets.States;
 using DG.Tweening;
+using Entitys;
+using Events;
 using UnityEngine;
+using Upgrades;
 
-namespace Assets.Scripts.States.ShopKeeperSTate
+namespace States.ShopKeeperSTate
 {
     public class MakeIceCream : IState
     {
@@ -19,17 +22,13 @@ namespace Assets.Scripts.States.ShopKeeperSTate
             _spriteRenderer = spriteRenderer;
         }
 
-        public void OnExit()
-        {
-            _spriteRenderer.material.SetFloat("_Arc1", 0);
-            _spriteRenderer.gameObject.SetActive(false);
-        }
-
         public void OnEnter()
         {
             _destination = _shopKeeper.IceCreamMachine.position;
             _shopKeeper.IsAriveIceCreamMachine = false;
-            Debug.Log($"enter MakeIceCream");
+            _spriteRenderer.gameObject.SetActive(true);
+
+            float upgradeTime = IceCreamEvent.OnGetManifactureTime(IceCreamType.Chokelate);
 
             _mySequence = DOTween.Sequence();
 
@@ -44,16 +43,22 @@ namespace Assets.Scripts.States.ShopKeeperSTate
                 standLookDir = _destination - _transform.position;
                 lookRot = Quaternion.LookRotation(standLookDir);
             });
-            _mySequence.Append(_transform.DORotateQuaternion(lookRot, 0.1f));
+            _mySequence.Append(_transform.DORotate(new Vector3(0 , 180, 0), 0.1f));
             _mySequence.OnComplete(() =>
             {
-                _spriteRenderer.material.DOFloat(360, "_Arc1", 2f)
+                _spriteRenderer.material.DOFloat(360, "_Arc1", upgradeTime)
                 .OnComplete(() =>
                 {
                     _spriteRenderer.gameObject.SetActive(true);
                     _shopKeeper.IceCreameDone = true;
                 });
             });
+        }
+
+        public void OnExit()
+        {
+            _spriteRenderer.material.SetFloat("_Arc1", 0);
+            _spriteRenderer.gameObject.SetActive(false);
         }
 
         public void Tick()

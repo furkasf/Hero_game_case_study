@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using Events;
+using Datas;
+using UnityEngine;
 
-namespace Assets.Scripts.Upgrades
+namespace Upgrades
 {
     public enum IceCreamType
     {
@@ -10,19 +12,63 @@ namespace Assets.Scripts.Upgrades
 
     public class IceCreamUpgradeHandler : MonoBehaviour
     {
-        private const string VanilaPath = "Resources/IceCreamDatas/Vanilla";
-        private const string ChokolatePath = "Resources/IceCreamDatas/Chokolate";
+        [SerializeField] private IceCreamData vanilaData;
+        [SerializeField] private IceCreamData chokalete;
 
-        private IceCreamDAta vanilaData;
-        private IceCreamDAta chokalete;
-
-        private void Awake()
+        private void OnEnable()
         {
-            vanilaData = Resources.Load<IceCreamDAta>(VanilaPath);
-            chokalete = Resources.Load<IceCreamDAta>(ChokolatePath);
+            IceCreamEvent.OnGetUpGradeCost += GetUpgradeCost;
+            IceCreamEvent.OnGetSellPrice += GetSellPrice;
+            IceCreamEvent.OnGetManifactureTime += GetManifactureTime;
+            IceCreamEvent.OnCanUpGrade += CanUpgrade;
+            IceCreamEvent.OnIncreaseUpgradeCost += IncreaseUpgradeCost;
         }
 
-        public IceCreamDAta GetIceCreamData(IceCreamType iceCreamType)
+        private void OnDisable()
+        {
+            IceCreamEvent.OnGetUpGradeCost -= GetUpgradeCost;
+            IceCreamEvent.OnGetSellPrice -= GetSellPrice;
+            IceCreamEvent.OnGetManifactureTime -= GetManifactureTime;
+            IceCreamEvent.OnCanUpGrade -= CanUpgrade;
+            IceCreamEvent.OnIncreaseUpgradeCost -= IncreaseUpgradeCost;
+        }
+
+        private int GetUpgradeCost(IceCreamType iceCreamType)
+        {
+            IceCreamData iceCream = GetIceCreamData(iceCreamType);
+
+            return iceCream.GetUpgradeCost();
+        }
+
+        private int GetSellPrice(IceCreamType iceCreamType)
+        {
+            IceCreamData iceCream = GetIceCreamData(iceCreamType);
+
+            return iceCream.GetSellPrice();
+        }
+
+        private float GetManifactureTime(IceCreamType iceCreamType)
+        {
+            IceCreamData iceCream = GetIceCreamData(iceCreamType);
+
+            return iceCream.GetManufactureTime();
+        }
+
+        private bool CanUpgrade(IceCreamType iceCreamType)
+        {
+            IceCreamData iceCream = GetIceCreamData(iceCreamType);
+
+            return iceCream.CanUpgrade();
+        }
+
+        private void IncreaseUpgradeCost(IceCreamType iceCreamType)
+        {
+            IceCreamData iceCream = GetIceCreamData(iceCreamType);
+
+            iceCream.IncreaseUpGradeCost();
+        }
+
+        public IceCreamData GetIceCreamData(IceCreamType iceCreamType)
         {
             switch (iceCreamType)
             {

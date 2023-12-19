@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.Datas
-{
+namespace Datas
+{ 
     [CreateAssetMenu(fileName = "ShopKeeperData", menuName = "GameData/ShopKeeperData")]
     public class ShopKeeperData : ScriptableObject
     {
         [SerializeField] private GameObject shopKeeperPrefab;
         [SerializeField] private int maxKeeperCount = 5;
         [SerializeField] private float speed = 1f;
-        [SerializeField] private float orderTakeDur = 0.5f;
+        
         
 
         public GameObject ShopKeeper => shopKeeperPrefab;

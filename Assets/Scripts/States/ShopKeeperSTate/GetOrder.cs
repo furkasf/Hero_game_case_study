@@ -1,9 +1,12 @@
 ﻿using Assets.States;
 using DG.Tweening;
+using Events;
 using System.Linq;
+using Entitys;
 using UnityEngine;
+using Upgrades;
 
-namespace Assets.Scripts.States.ShopKeeperSTate
+namespace States.ShopKeeperSTate
 {
     public class GetOrder : IState
     {
@@ -25,12 +28,11 @@ namespace Assets.Scripts.States.ShopKeeperSTate
         public void OnEnter()
         {
 
-           // _shopKeeper.IsAvaible = false;
            
 
             _mySequence = DOTween.Sequence();
 
-            Debug.Log("enter get order");
+            float upgradeTime = IceCreamEvent.OnGetManifactureTime(IceCreamType.Chokelate);
 
             _destination = _shopKeeper.ShopNode.ShopKeperWaitPOs;
 
@@ -43,16 +45,10 @@ namespace Assets.Scripts.States.ShopKeeperSTate
             _mySequence.OnComplete(() =>
             {
                 _spriteREnderer.gameObject.SetActive(true);
-                _spriteREnderer.material.DOFloat(360, "_Arc1", 2f)// iceCreamd upgraden all
+                _spriteREnderer.material.DOFloat(360, "_Arc1", upgradeTime)
                 .OnComplete(() => _shopKeeper.IsAriveIceCreamMachine = true); 
             });
         }
-
-        //private void TakeOrder()
-        //{
-        //    _spriteREnderer.DOColor(Color.green, _orderDuration)
-        //        .OnComplete(() => );
-        //}
 
         public void OnExit()
         {

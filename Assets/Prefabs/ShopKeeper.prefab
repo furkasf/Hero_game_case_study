@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ee5d2bbfe695a14c8940601a1cf5af8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _myTransform: {fileID: 0}
+  _myTransform: {fileID: 243091539054322544}
   _spriteRenderer: {fileID: 1410928526272810909}
   _iceCreamMachine: {fileID: 0}
 --- !u!1 &4509591014974565243
@@ -195,7 +195,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!1 &8687467397659369988
 GameObject:

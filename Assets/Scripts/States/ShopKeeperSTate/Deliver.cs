@@ -1,9 +1,9 @@
-﻿using Assets.Scripts.Signals;
-using Assets.States;
+﻿using Assets.States;
 using DG.Tweening;
+using Entitys;
 using UnityEngine;
 
-namespace Assets.Scripts.States.ShopKeeperSTate
+namespace States.ShopKeeperSTate
 {
     public class Deliver : IState
     {
@@ -23,9 +23,6 @@ namespace Assets.Scripts.States.ShopKeeperSTate
         {
             _shopKeeper.IceCreameDone = false;
 
-            Debug.Log($"enter Delivery");
-
-
             _mySequence = DOTween.Sequence();
 
             _destination = _shopKeeper.ShopNode.ShopKeperWaitPOs;
@@ -43,18 +40,14 @@ namespace Assets.Scripts.States.ShopKeeperSTate
 
                 _shopKeeper.ShopNode.ResetNode();
                 _shopKeeper.ShopNode = null;
-                
+
                 _shopKeeper.DeliveryDone = true;
-                
             });
         }
 
         public void OnExit()
         {
-
-           
         }
-
 
         public void Tick()
         {
